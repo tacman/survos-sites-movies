@@ -47,6 +47,18 @@
             "config/routes/easyadmin.yaml"
         ]
     },
+    "php-http/discovery": {
+        "version": "1.20",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.18",
+            "ref": "f45b5dd173a27873ab19f5e3180b2f661c21de02"
+        },
+        "files": [
+            "config/packages/http_discovery.yaml"
+        ]
+    },
     "phpunit/phpunit": {
         "version": "12.4",
         "recipe": {
@@ -76,6 +88,18 @@
     },
     "survos/ciine-bundle": {
         "version": "2.0.21"
+    },
+    "survos/code-bundle": {
+        "version": "2.0.25"
+    },
+    "survos/core-bundle": {
+        "version": "1.6.44"
+    },
+    "survos/inspection-bundle": {
+        "version": "1.6.44"
+    },
+    "survos/meili-bundle": {
+        "version": "1.5.0"
     },
     "symfony/asset-mapper": {
         "version": "7.3",

@@ -132,4 +132,11 @@ return [
         'version' => '3.0.5',
         'type' => 'css',
     ],
+    'instantsearch.css/themes/algolia.min.css' => [
+        'version' => '8.5.1',
+        'type' => 'css',
+    ],
+    '@andypf/json-viewer' => [
+        'version' => '2.2.0',
+    ],
 ];
