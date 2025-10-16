@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Movie;
+use App\Repository\BookRepository;
 use App\Repository\MovieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Reader;
@@ -18,9 +19,9 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class LoadBooksCommand
 {
 	public function __construct(
-        private LooseObjectMapper $objectMapper,
+        private LooseObjectMapper      $objectMapper,
         private EntityManagerInterface $em,
-        private MovieRepository $movieRepository,
+        private BookRepository         $bookRepository,
     )
 	{
 	}

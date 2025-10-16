@@ -139,4 +139,11 @@ return [
     '@andypf/json-viewer' => [
         'version' => '2.2.0',
     ],
+    '@tabler/core' => [
+        'version' => '1.4.0',
+    ],
+    '@tabler/core/dist/css/tabler.min.css' => [
+        'version' => '1.4.0',
+        'type' => 'css',
+    ],
 ];

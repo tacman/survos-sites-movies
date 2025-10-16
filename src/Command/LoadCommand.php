@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Movie;
+use App\Repository\MovieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Reader;
 use Survos\CoreBundle\Service\LooseObjectMapper;
@@ -19,6 +20,7 @@ class LoadCommand
 	public function __construct(
         private LooseObjectMapper $objectMapper,
         private EntityManagerInterface $em,
+        private MovieRepository $movieRepository,
     )
 	{
 	}
@@ -30,19 +32,28 @@ class LoadCommand
 		string $url = "https://raw.githubusercontent.com/sanjeevai/Investigate_a_dataset/master/tmdb-movies.csv",
 		#[Option('limit the number imported')] ?int $limit = null,
 		#[Option('batch flush')] int $batch = 500,
+		#[Option('purge the table first')] ?bool $reset = null,
 	): int
 	{
         $filename = 'movies.csv';
         if (!file_exists($filename)) {
             file_put_contents($filename, file_get_contents($url));
         }
+        if ($reset) {
+            $deleted = $this->em->createQueryBuilder()->delete(Movie::class, 'm')->getQuery()->execute();
+            $io->writeln("$deleted rows deleted");
+        }
         $reader = Reader::createFromPath($filename, 'r');
         $reader->setHeaderOffset(0);
         foreach ($reader as $idx => $row) {
-            if (!$movie = $this->em->getRepository(Movie::class)->find($row['id'])) {
+            // skip the lookup if reset
+            if ($reset || (!$movie = $this->em->getRepository(Movie::class)->find($row['id']))) {
                 $movie = new Movie();
                 $movie->id = $row['id'];
                 $this->em->persist($movie);
+            }
+            foreach (['production_companies','cast','budget_adj','revenue_adj'] as $key) {
+                unset($row[$key]);
             }
 //            $entity =
                 $this->objectMapper->mapInto($row, $movie, ignored: ['id']);

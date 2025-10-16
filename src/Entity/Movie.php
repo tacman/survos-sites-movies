@@ -52,6 +52,7 @@ final class Movie
 	public ?string $homepage = null;
 
 	#[Column(length: 255, nullable: true)]
+    #[Facet()]
 	public ?string $director = null;
 
 	#[Column(length: 255, nullable: true)]

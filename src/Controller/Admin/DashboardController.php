@@ -5,10 +5,12 @@ namespace App\Controller\Admin;
 use App\Entity\Movie;
 use App\Repository\MovieRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Survos\MeiliBundle\Service\MeiliService;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -25,19 +27,16 @@ class DashboardController extends AbstractDashboardController
 
     public function index(): Response
     {
-//        return parent::index();
+        return $this->render('@SurvosMeili/ez/dashboard.html.twig', [
+            'settings' => $this->meiliService->settings
+        ]);
 
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // 1.1) If you have enabled the "pretty URLs" feature:
-//         return $this->redirectToRoute('admin_movie_index');
-        //
-        // 1.2) Same example but using the "ugly URLs" that were used in previous EasyAdmin versions:
-        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
+    }
 
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
+    #[AdminRoute('/examples', name: 'examples')]
+    #[Template('app/index.html.twig')]
+    public function examples(): Response
+    {
         // if ('jane' === $this->getUser()->getUsername()) {
         //     return $this->redirectToRoute('...');
         // }
@@ -69,6 +68,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToRoute('Examples', 'fa fa-home', 'admin_examples');
          yield MenuItem::linkToCrud('movies', 'fas fa-list', Movie::class);
          foreach ($this->meiliService->settings as $indexName => $meiliSetting) {
              yield MenuItem::linkToUrl('search ' . $meiliSetting['rawName'], 'fas fa-search',
