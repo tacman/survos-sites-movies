@@ -20,4 +20,5 @@ return [
     Survos\InspectionBundle\SurvosInspectionBundle::class => ['all' => true],
     Survos\MeiliBundle\SurvosMeiliBundle::class => ['all' => true],
     Survos\CodeBundle\SurvosCodeBundle::class => ['dev' => true, 'test' => true],
+    Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
 ];

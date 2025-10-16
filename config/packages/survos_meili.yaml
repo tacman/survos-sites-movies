@@ -1,0 +1,19 @@
+survos_meili:
+    enabled: true
+    apiKey: '%env(default::MEILI_API_KEY)%'
+    searchKey: '%env(default::MEILI_SEARCH_KEY)%'
+    meiliPrefix: '%env(default::MEILI_PREFIX)%'
+    passLocale: false
+    maxValuesPerFacet: 1200
+    embedders:
+        small: # for testing, as cheap as possible
+            source: 'openAi'
+            model: 'text-embedding-3-small' # 2 cents/million tokens
+            apiKey: '%env(OPENAI_API_KEY)%'
+            template: 'templates/liquid/movie.liquid'
+
+        best: # for production if budget allows
+            source: 'openAi'
+            model: 'text-embedding-3-large' # 13 cents/million tokens
+            apiKey: '%env(OPENAI_API_KEY)%'
+            template: 'templates/liquid/movie.liquid'
