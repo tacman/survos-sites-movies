@@ -4,9 +4,11 @@ namespace App\Controller\Admin;
 
 use App\Entity\Movie;
 use App\Repository\MovieRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Menu\SectionMenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Survos\MeiliBundle\Service\MeiliService;
@@ -18,6 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class DashboardController extends AbstractDashboardController
 {
     public function __construct(
+        private EntityManagerInterface $em,
         private MovieRepository $movieRepository,
         private UrlGeneratorInterface $urlGenerator,
         private MeiliService $meiliService,
@@ -69,16 +72,22 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToRoute('Examples', 'fa fa-home', 'admin_examples');
-         yield MenuItem::linkToCrud('movies', 'fas fa-list', Movie::class);
+
+//        yield MenuItem::linkToCrud('movies', 'fas fa-list', Movie::class);
          foreach ($this->meiliService->settings as $indexName => $meiliSetting) {
-             yield MenuItem::linkToUrl('search ' . $meiliSetting['rawName'], 'fas fa-search',
+             $class = $meiliSetting['class'];
+             $label = new \ReflectionClass($class)->getShortName();
+             yield MenuItem::linkToCrud($label, 'fas fa-database', $class)
+                 ->setBadge($this->em->getRepository($class)->count());
+
+             yield MenuItem::linkToUrl('full-text ' . $meiliSetting['rawName'], 'fas fa-search',
                  $this->urlGenerator->generate('meili_insta',
                      ['indexName' => $indexName],
                  )
              );
 
                  foreach ($meiliSetting['embedders'] as $embedder) {
-                     yield MenuItem::linkToUrl('embedder ' . $embedder, 'fas fa-search',
+                     yield MenuItem::linkToUrl('semantic ' . $embedder, 'fab fa-searchengin',
                          $this->urlGenerator->generate('meili_insta_embed',
                      ['indexName' => $indexName, 'embedder' => $embedder],
                  ));

@@ -17,3 +17,18 @@ survos_meili:
             model: 'text-embedding-3-large' # 13 cents/million tokens
             apiKey: '%env(OPENAI_API_KEY)%'
             template: 'templates/liquid/movie.liquid'
+        small_film: # for production if budget allows
+            source: 'openAi'
+            model: 'text-embedding-3-small' # 13 cents/million tokens
+            apiKey: '%env(OPENAI_API_KEY)%'
+            template: 'templates/liquid/film.liquid'
+        small_wam: # for production if budget allows
+            source: 'openAi'
+            model: 'text-embedding-3-small' # 13 cents/million tokens
+            apiKey: '%env(OPENAI_API_KEY)%'
+            template: 'templates/liquid/wam.liquid'
+        large_wam: # for production if budget allows
+            source: 'openAi'
+            model: 'text-embedding-3-large' # 13 cents/million tokens
+            apiKey: '%env(OPENAI_API_KEY)%'
+            template: 'templates/liquid/wam.liquid'

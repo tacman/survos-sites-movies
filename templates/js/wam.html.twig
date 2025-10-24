@@ -1,72 +1,129 @@
-{# templates/_partials/hit_table.html.twig #}
-{# Config (optional): pass a `config` map: maxLen, maxList, prettyJson #}
-{% set cfg = {
-    maxLen:   config.maxLen   | default(120),
-    maxList:  config.maxList  | default(6),
-    prettyJson: config.prettyJson | default(true)
-} %}
 
-<div class="table-responsive">
-    <table class="table table-sm table-hover align-middle mb-0">
-        <tbody>
-        {% for var, val in hit %}
+<div class="card h-100">
+    <div class="card-header d-flex align-items-start justify-content-between gap-3">
+        <div class="flex-grow-1 min-w-0">
+            <h5 class="mb-1 text-truncate">
+                {% set href = hit.url ?? '#' %}
+                <a href="{{ href }}" target="_blank" rel="noopener"
+                   class="link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                    {{ hit.title ?? hit.registrationNumber ?? 'Untitled' }}
+                </a>
+                {% if hit.registrationNumber %}
+                    <span class="text-body-secondary">({{ hit.registrationNumber }})</span>
+                {% endif %}
+            </h5>
 
-            {# Guarded row (works everywhere) #}
-            {% if not (var starts with '_') %}
-                <tr>
-                    <th class="text-muted fw-normal pe-3" style="white-space: nowrap; width:1%;">
-                        {{ var }}
-                    </th>
-
-                    <td class="w-100">
-                        {% if val is not iterable %}
-                            {% set s = val %}
-                            {% set isLong = s|length > cfg.maxLen %}
-                            {% set shown  = isLong ? s|slice(0, cfg.maxLen) ~ '…' : s %}
-                            <span class="d-block text-truncate" style="max-width:100%;" title="{{ s }}">
-                {{ shown }}
-              </span>
-
-                            {# ITERABLE ------------------------------------------------------- #}
-                        {% else %}
-                            {# Determine if it's a simple scalar list vs complex/nested #}
-                            {% set simpleList = true %}
-                            {% set flat = [] %}
-                            {% for item in val %}
-                                {% if item is iterable %}
-                                    {% set simpleList = false %}
-                                {% else %}
-                                    {% set flat = flat|merge([item]) %}
-                                {% endif %}
-                            {% endfor %}
-
-                            {% if simpleList %}
-                                {# Show as Bootstrap 5 badges, limited with a +N badge #}
-                                {% set extra = (flat|length > cfg.maxList) ? (flat|length - cfg.maxList) : 0 %}
-                                <div class="d-flex flex-wrap gap-1">
-                                    {% for item in flat|slice(0, cfg.maxList) %}
-                                        <span class="badge text-bg-secondary" title="{{ item }}">{{ item }}</span>
-                                    {% endfor %}
-                                    {% if extra > 0 %}
-                                        <span class="badge text-bg-light border" title="{{ flat|slice(cfg.maxList)|join(', ') }}">+{{ extra }} more</span>
-                                    {% endif %}
-                                </div>
-                            {% else %}
-                                {# Complex object/array → compact JSON, single-line, truncated visually #}
-                                {% set jsonOpts = cfg.prettyJson
-                                    ? constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES')
-                                    : constant('JSON_UNESCAPED_SLASHES')
-                                %}
-                                {% set j = val|json_encode(jsonOpts) %}
-                                <code class="d-block text-truncate small" style="max-width:100%;" title="{{ j }}">
-                                    {{ j }}
-                                </code>
-                            {% endif %}
-                        {% endif %}
-                    </td>
-                </tr>
+            {% if hit.collection %}
+                <p class="mb-0 text-body-secondary fst-italic text-truncate">
+                    {{ hit.collection }}
+                </p>
             {% endif %}
-        {% endfor %}
-        </tbody>
-    </table>
+        </div>
+
+        {# Subjects as a compact badge stack on the right #}
+        {% if hit.subject is defined and hit.subject|length > 0 %}
+            <div class="d-flex flex-column align-items-end gap-1 text-end">
+                {% for s in hit.subject %}
+                    <span class="badge text-bg-primary">{{ s }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="card-body">
+        <div class="d-flex gap-3">
+            {# Image column #}
+            <div class="flex-shrink-0" style="width: 120px;">
+                {% set img = hit.wamImage %}
+                {% if img %}
+                    <img src="{{ img }}"
+                         alt="{{ hit.title ?? hit.registrationNumber ?? 'Image' }}"
+                         class="img-fluid rounded border"
+                         loading="lazy"
+                         style="max-height: 160px; object-fit: cover; width: 120px;">
+                {% else %}
+                    <svg class="bd-placeholder-img img-fluid rounded border" width="120" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="No image" preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <rect width="100%" height="100%" fill="#e9ecef"></rect>
+                        <text x="50%" y="50%" fill="#6c757d" dy=".3em" text-anchor="middle" font-size="12">No image</text>
+                    </svg>
+                {% endif %}
+            </div>
+
+            {# Text column #}
+            <div class="flex-grow-1 min-w-0">
+                {% if hit.description %}
+                    <p class="text-body-secondary mb-3 clamp-3">
+                        {{ hit.description }}
+                    </p>
+                {% endif %}
+
+                {# Keywords #}
+                {% if hit.keywords is defined and hit.keywords|length > 0 %}
+                    <div class="d-flex flex-wrap gap-1 mb-2">
+                        {% for kw in hit.keywords %}
+                            <span class="badge text-bg-secondary">{{ kw }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {# Meta grid (example: show URL host) #}
+                <div class="row row-cols-1 row-cols-sm-2 gy-1 small text-body-secondary">
+                    {% if hit.url %}
+                        <div class="col">
+                            <span class="fw-semibold">Source</span>
+                            <div>
+                                <a href="{{ hit.url }}" target="_blank" rel="noopener" class="text-decoration-none">
+                                    {{ hit.url|replace({'http://':'','https://':''})|split('/')|first }}
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if hit.collection %}
+                        <div class="col">
+                            <span class="fw-semibold">Collection</span>
+                            <div>{{ hit.collection }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex flex-wrap gap-3 text-body-secondary small">
+            {% if hit.registrationNumber %}
+                <span>Reg#: {{ hit.registrationNumber }}</span>
+            {% endif %}
+        </div>
+        <code>Score: {{ (hit._rankingScore*1000)|number_format(3) }}</code>
+
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            {% if hit.url %}
+                <a href="{{ hit.url }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">
+                    View Object
+                </a>
+            {% endif %}
+
+            {# There will always be a primaryKey value #}
+            {% set pkVal = attribute(hit, _config.primaryKey) %}
+            <button
+                {{ stimulus_action(globals._sc_modal, 'modal') }}
+                data-hit-id="{{ pkVal }}"
+                class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1"
+                title="View JSON details">
+                {{ ux_icon('json')|raw }}
+                <span class="ms-1">Details {{ pkVal }}</span>
+            </button>
+
+        </div>
+    </div>
 </div>
+
+<style>
+    .clamp-3 {
+        display:-webkit-box;
+        -webkit-line-clamp:3;
+        -webkit-box-orient:vertical;
+        overflow:hidden;
+    }
+</style>
