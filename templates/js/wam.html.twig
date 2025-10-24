@@ -1,0 +1,72 @@
+{# templates/_partials/hit_table.html.twig #}
+{# Config (optional): pass a `config` map: maxLen, maxList, prettyJson #}
+{% set cfg = {
+    maxLen:   config.maxLen   | default(120),
+    maxList:  config.maxList  | default(6),
+    prettyJson: config.prettyJson | default(true)
+} %}
+
+<div class="table-responsive">
+    <table class="table table-sm table-hover align-middle mb-0">
+        <tbody>
+        {% for var, val in hit %}
+
+            {# Guarded row (works everywhere) #}
+            {% if not (var starts with '_') %}
+                <tr>
+                    <th class="text-muted fw-normal pe-3" style="white-space: nowrap; width:1%;">
+                        {{ var }}
+                    </th>
+
+                    <td class="w-100">
+                        {% if val is not iterable %}
+                            {% set s = val %}
+                            {% set isLong = s|length > cfg.maxLen %}
+                            {% set shown  = isLong ? s|slice(0, cfg.maxLen) ~ '…' : s %}
+                            <span class="d-block text-truncate" style="max-width:100%;" title="{{ s }}">
+                {{ shown }}
+              </span>
+
+                            {# ITERABLE ------------------------------------------------------- #}
+                        {% else %}
+                            {# Determine if it's a simple scalar list vs complex/nested #}
+                            {% set simpleList = true %}
+                            {% set flat = [] %}
+                            {% for item in val %}
+                                {% if item is iterable %}
+                                    {% set simpleList = false %}
+                                {% else %}
+                                    {% set flat = flat|merge([item]) %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if simpleList %}
+                                {# Show as Bootstrap 5 badges, limited with a +N badge #}
+                                {% set extra = (flat|length > cfg.maxList) ? (flat|length - cfg.maxList) : 0 %}
+                                <div class="d-flex flex-wrap gap-1">
+                                    {% for item in flat|slice(0, cfg.maxList) %}
+                                        <span class="badge text-bg-secondary" title="{{ item }}">{{ item }}</span>
+                                    {% endfor %}
+                                    {% if extra > 0 %}
+                                        <span class="badge text-bg-light border" title="{{ flat|slice(cfg.maxList)|join(', ') }}">+{{ extra }} more</span>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                {# Complex object/array → compact JSON, single-line, truncated visually #}
+                                {% set jsonOpts = cfg.prettyJson
+                                    ? constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES')
+                                    : constant('JSON_UNESCAPED_SLASHES')
+                                %}
+                                {% set j = val|json_encode(jsonOpts) %}
+                                <code class="d-block text-truncate small" style="max-width:100%;" title="{{ j }}">
+                                    {{ j }}
+                                </code>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
