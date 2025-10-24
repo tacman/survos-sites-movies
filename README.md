@@ -1,5 +1,7 @@
 # Movies
 
+c code:import App\\Entity\\Movie
+
 ## To add 
 
 * install symfony/ux-icons
