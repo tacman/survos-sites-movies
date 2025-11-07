@@ -7,7 +7,6 @@ c code:import App\\Entity\\Movie
 * install symfony/ux-icons
 * make:search?  code:search to add #[MeiliIndex()] and populate rawName.html.twig?
 
-
 Install a bootstrap theme (bootstrap, tabler, bootswatch, etc.)
 
 bin/console importmap:require @tabler/core

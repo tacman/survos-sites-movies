@@ -1,4 +1,6 @@
 import 'instantsearch.css/themes/algolia.min.css';
+// OPTIONAL: tiny spacing vars used by instant-meilisearch basic template
+import '@meilisearch/instant-meilisearch/templates/basic_search.css';
 
 import './bootstrap.js';
 /*
@@ -12,4 +14,6 @@ import './styles/app.css';
 import '@tabler/core';
 import '@tabler/core/dist/css/tabler.min.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+console.log('This log comes from assets/app.js - welcome to AssetMapper.  We have json-viewer!! 🎉');
+
+import "@andypf/json-viewer";

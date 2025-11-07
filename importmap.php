@@ -146,4 +146,14 @@ return [
         'version' => '1.4.0',
         'type' => 'css',
     ],
+    'debug' => [
+        'version' => '4.4.3',
+    ],
+    'ms' => [
+        'version' => '2.1.3',
+    ],
+    '@meilisearch/instant-meilisearch/templates/basic_search.css' => [
+        'version' => '0.28.0',
+        'type' => 'css',
+    ],
 ];

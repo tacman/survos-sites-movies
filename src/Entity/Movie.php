@@ -7,7 +7,6 @@ namespace App\Entity;
 use App\Repository\MovieRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
@@ -20,9 +19,7 @@ use Survos\MeiliBundle\Metadata\MeiliIndex;
  */
 #[Entity(repositoryClass: MovieRepository::class)]
 #[MeiliIndex(
-    filterable: ['genres', 'keywords','releaseYear','runtime'],
-    sortable: ['releaseYear'],
-    embedders: ['small']
+    filterable: ['year', 'budget', 'genres'],
 )]
 final class Movie
 {
@@ -31,68 +28,44 @@ final class Movie
 	public ?int $id = null;
 
 	#[Column(length: 255, nullable: true)]
-	public ?string $imdbId = null;
+	public ?string $title = null;
+
+	#[Column(length: 255, nullable: true)]
+	public ?string $overview = null;
+
+	#[Column(length: 255, nullable: true)]
+	public ?string $tags = null;
+
+	#[Column(type: Types::JSON, options: ['jsonb' => true], nullable: true)]
+	public ?array $genres = null;
+
+	#[Column(length: 255, nullable: true)]
+	public ?string $director = null;
+
+	#[Column(type: Types::JSON, options: ['jsonb' => true], nullable: true)]
+	public ?array $actors = null;
+
+	#[Column(type: Types::JSON, options: ['jsonb' => true], nullable: true)]
+	public ?array $characters = null;
+
+	#[Column(type: Types::INTEGER, nullable: true)]
+    #[Facet(widget: FacetWidget::RangeSlider)]
+	public ?int $year = null;
+
+	#[Column(type: Types::INTEGER, nullable: true)]
+    #[Facet(widget: FacetWidget::RangeSlider)]
+	public ?int $votes = null;
+
+	#[Column(type: Types::FLOAT, nullable: true)]
+	public ?float $rating = null;
 
 	#[Column(type: Types::FLOAT, nullable: true)]
 	public ?float $popularity = null;
 
 	#[Column(type: Types::INTEGER, nullable: true)]
+    #[Facet(widget: FacetWidget::RangeSlider)]
 	public ?int $budget = null;
 
-	#[Column(type: Types::INTEGER, nullable: true)]
-	public ?int $revenue = null;
-
-	#[Column(length: 255, nullable: true)]
-	public ?string $originalTitle = null;
-
-	#[Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
-	public ?array $cast = null;
-
 	#[Column(length: 2048, nullable: true)]
-	public ?string $homepage = null;
-
-	#[Column(length: 255, nullable: true)]
-    #[Facet()]
-	public ?string $director = null;
-
-	#[Column(length: 255, nullable: true)]
-	public ?string $tagline = null;
-
-	#[Column(type: Types::JSON, options: ['jsonb' => true], nullable: true)]
-	public ?array $keywords = null;
-
-	#[Column(length: 255, nullable: true)]
-	public ?string $overview = null;
-
-    #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    #[Facet(widget: FacetWidget::RangeSlider, format: 'minutes')]
-    public ?int $runtime = null;
-
-    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
-    #[Facet(label: 'Genre', widget: FacetWidget::RefinementList, sortMode: 'count', collapsed: false, limit: 12, showMoreLimit: 50)]
-    public ?array $genres = null;
-
-    #[ORM\Column(type: Types::JSON, options: ['jsonb' => true], nullable: true)]
-    #[Facet(label: 'Production Companies', collapsed: true, sortMode: 'count')]
-    public ?array $productionCompanies = null;
-
-    #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    #[Facet(widget: FacetWidget::RangeSlider, label: 'Year', sortMode: 'alpha', collapsed: false)]
-    public ?int $releaseYear = null;
-
-	#[Column(length: 255, nullable: true)]
-	public ?string $releaseDate = null;
-
-	#[Column(type: Types::INTEGER, nullable: true)]
-    #[Facet(widget: FacetWidget::RangeSlider)]
-	public ?int $voteCount = null;
-
-	#[Column(type: Types::FLOAT, nullable: true)]
-	public ?float $voteAverage = null;
-
-	#[Column(type: Types::FLOAT, nullable: true)]
-	public ?float $budgetAdj = null;
-
-	#[Column(type: Types::FLOAT, nullable: true)]
-	public ?float $revenueAdj = null;
+	public ?string $posterUrl = null;
 }
