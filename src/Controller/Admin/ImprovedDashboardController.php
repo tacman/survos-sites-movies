@@ -89,7 +89,7 @@ class ImprovedDashboardController extends AbstractDashboardController
 //                        ->setBadge($count, 'info')
                     ,
                     MenuItem::linkToUrl('Overview', 'fas fa-eye',
-                        $this->urlGenerator->generate('admin_meili_show_index',
+                        $this->urlGenerator->generate('meili_admin_meili_show_index',
                             ['indexName' => $indexName]
                         )
                     )->setLinkTarget('_blank'),

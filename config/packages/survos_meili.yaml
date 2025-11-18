@@ -1,3 +1,4 @@
+# movies/config/packages/survos_meili.yaml
 survos_meili:
     enabled: true
     apiKey: '%env(default::MEILI_API_KEY)%'
