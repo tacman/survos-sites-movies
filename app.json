@@ -1,0 +1,5 @@
+{
+    "name": "movies",
+    "description": "Started out as a movie demo, but now several meilisearch demos",
+    "repository": "https://github.com/survos-sites/movies"
+}

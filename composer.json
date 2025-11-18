@@ -1,5 +1,7 @@
 {
     "type": "project",
+    "name": "survos-sites/movies",
+    "description": "Started out as a movie demo, but now several meilisearch demos",
     "license": "proprietary",
     "minimum-stability": "dev",
     "prefer-stable": true,
