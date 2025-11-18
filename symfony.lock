@@ -74,32 +74,23 @@
             "bin/phpunit"
         ]
     },
-    "sensiolabs/ansi-to-html": {
-        "version": "2.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "1.2",
-            "ref": "d58d11d5b998f39260d387d3a0b50adc342db7e4"
-        },
-        "files": [
-            "config/packages/ansi_to_html.yaml"
-        ]
-    },
-    "survos/ciine-bundle": {
-        "version": "2.0.21"
-    },
     "survos/code-bundle": {
         "version": "2.0.25"
     },
     "survos/core-bundle": {
         "version": "1.6.44"
     },
+    "survos/deployment-bundle": {
+        "version": "2.0.57"
+    },
+    "survos/ez-bundle": {
+        "version": "2.0.51"
+    },
     "survos/import-bundle": {
         "version": "2.0.36"
     },
-    "survos/inspection-bundle": {
-        "version": "1.6.44"
+    "survos/jsonl-bundle": {
+        "version": "2.0.55"
     },
     "survos/meili-bundle": {
         "version": "1.5.0"
@@ -404,18 +395,6 @@
         },
         "files": [
             "config/packages/messenger.yaml"
-        ]
-    },
-    "symfony/workflow": {
-        "version": "7.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "3.3",
-            "ref": "3b2f8ca32a07fcb00f899649053943fa3d8bbfb6"
-        },
-        "files": [
-            "config/packages/workflow.yaml"
         ]
     },
     "twig/extra-bundle": {

@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use Survos\MeiliBundle\Bridge\EasyAdmin\MeiliEasyAdminMenuFactory;
 use Survos\MeiliBundle\Service\MeiliService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -20,6 +21,7 @@ class MeiliDashboardController extends AbstractDashboardController
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly MeiliEasyAdminMenuFactory $meiliMenuFactory,
         private readonly MeiliService $meiliService,
     ) {
     }
@@ -41,39 +43,9 @@ class MeiliDashboardController extends AbstractDashboardController
         //        yield MenuItem::linkToRoute('Examples', 'fa fa-lightbulb', 'admin_examples');
 
                 yield MenuItem::section('Content Management', 'fas fa-folder-open');
-                ;
+                yield from $this->meiliMenuFactory->createIndexMenus();
 
                 // Group each entity with its search options
-                foreach ($this->meiliService->settings as $indexName => $meiliSetting) {
-                    $class = $meiliSetting['class'];
-                    $label = new \ReflectionClass($class)->getShortName();
-                    $count = $this->em->getRepository($class)->count();
-
-                    // Parent menu item for the entity
-                    yield MenuItem::subMenu($label, 'fas fa-film')
-                        ->setBadge($count, 'info')
-        //                ->setSubItemsExpanded(true)
-                        ->setSubItems([
-                            // CRUD management
-                            MenuItem::linkToCrud('Browse All', 'fas fa-table', $class)
-        //                        ->setBadge($count, 'info')
-                            ,
-
-                            // Divider before searches
-                            MenuItem::section('Search Options'),
-
-                            // Full-text search
-                            MenuItem::linkToUrl('Full-Text Search', 'fas fa-search',
-                                $this->urlGenerator->generate('meili_insta',
-                                    ['indexName' => $indexName]
-                                )
-                            )->setLinkTarget('_blank'),
-
-                            // Semantic searches grouped
-                            ...$this->getSemanticSearchItems($indexName, $meiliSetting)
-                        ]);
-                }
-
                 // Optional: Add a tools/utilities section at the bottom
                 yield MenuItem::section('Tools', 'fas fa-wrench');
                 foreach ($this->meiliService->tools as $tool) {

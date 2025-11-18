@@ -1312,6 +1312,9 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  * @psalm-type SurvosEzConfig = array{
  *     enabled?: bool, // Default: true
  * }
+ * @psalm-type SurvosDeploymentConfig = array{
+ *     enabled?: bool, // Default: true
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1354,6 +1357,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         ux_icons?: UxIconsConfig,
  *         survos_import?: SurvosImportConfig,
  *         survos_ez?: SurvosEzConfig,
+ *         survos_deployment?: SurvosDeploymentConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1396,6 +1400,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         ux_icons?: UxIconsConfig,
  *         survos_import?: SurvosImportConfig,
  *         survos_ez?: SurvosEzConfig,
+ *         survos_deployment?: SurvosDeploymentConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

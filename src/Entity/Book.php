@@ -17,7 +17,8 @@ use Survos\MeiliBundle\Metadata\MeiliIndex;
  */
 #[Entity(repositoryClass: BookRepository::class)]
 #[MeiliIndex(
-    filterable: ['languageCode']
+    searchable: ['title'],
+    filterable: ['languageCode','originalPublicationYear']
 )]
 final class Book
 {

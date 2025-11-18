@@ -1,6 +1,12 @@
 # Movies
 
-c code:import App\\Entity\\Movie
+c import:entities App\\Entity\\Movie --file data/movies.csv
+c import:entities App\\Entity\\Wam --file data/wam/raw/wam-dywer.csv
+
+# from https://github.com/metmuseum/openaccess
+c import:entities MetObject --file ../mus/data/met/json/obj.json
+
+$ git lfs clone https://github.com/metmuseum/openaccess
 
 ## To add 
 
